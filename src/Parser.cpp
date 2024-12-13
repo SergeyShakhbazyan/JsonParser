@@ -2,8 +2,6 @@
 // Created by Sergey Shakhbazyan on 13.12.24.
 //
 
-#pragma once
-
 #include "../include/Parser.h"
 #include <map>
 #include <stdexcept>

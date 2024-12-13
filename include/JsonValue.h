@@ -5,8 +5,6 @@
 #ifndef JSOMPROJECT_JSONVALUE_H
 #define JSOMPROJECT_JSONVALUE_H
 
-#pragma once
-
 #include <variant>
 #include <map>
 
@@ -47,6 +45,50 @@ public:
     const std::string asString() const;
     const std::map<std::string, JsonValue>& asObject() const;
     const std::vector<JsonValue>& asArray() const;
+
+    template<typename Visitor>
+    void visit(Visitor &&visitor) const {
+        switch (type) {
+            case Type::Null:
+                visitor("null");
+                break;
+            case Type::Boolean:
+                visitor(std::get<bool>(value) ? "true" : "false");
+                break;
+            case Type::Number:
+                visitor(std::to_string(std::get<double>(value)));
+                break;
+            case Type::String:
+                visitor("\"" + std::get<std::string>(value) + "\"");
+                break;
+            case Type::Object: {
+                visitor("{");
+                const auto &obj = std::get<std::map<std::string, JsonValue>>(value);
+                for (auto it = obj.begin(); it != obj.end(); ++it) {
+                    if (it != obj.begin()) {
+                        visitor(", ");
+                    }
+                    visitor("\"" + it->first + "\": ");
+                    it->second.visit(visitor);
+                }
+                visitor("}");
+                break;
+            }
+            case Type::Array: {
+                visitor("[");
+                const auto &arr = std::get<std::vector<JsonValue>>(value);
+                for (size_t i = 0; i < arr.size(); ++i) {
+                    if (i > 0) {
+                        visitor(", ");
+                    }
+                    arr[i].visit(visitor);
+                }
+                visitor("]");
+                break;
+            }
+        }
+    }
+
 };
 
 

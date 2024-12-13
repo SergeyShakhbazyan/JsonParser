@@ -24,20 +24,11 @@ int main() {
 
         const auto& rootObject = jsonRoot.asObject();
 
-        std::cout << "Name: " << rootObject.at("name").asString() << std::endl;
-        std::cout << "Age: " << rootObject.at("age").asNumber() << std::endl;
-        std::cout << "Is Student: " << (rootObject.at("isStudent").asBoolean() ? "true" : "false") << std::endl;
-
-        const auto& address = rootObject.at("address").asObject();
-        std::cout << "City: " << address.at("city").asString() << std::endl;
-        std::cout << "ZIP: " << address.at("zip").asString() << std::endl;
-
-        const auto& skills = rootObject.at("skills").asArray();
-        std::cout << "Skills: ";
-        for (const auto& skill : skills) {
-            std::cout << skill.asString() << " ";
+        for (const auto& [key, value] : rootObject) {
+            std::cout << key << ": ";
+            value.visit([](const std::string& output) { std::cout << output; });
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

@@ -2,7 +2,6 @@
 // Created by Sergey Shakhbazyan on 12.12.24.
 //
 
-#pragma once
 #include "../include/JsonValue.h"
 #include <sstream>
 #include <stdexcept>
@@ -81,8 +80,6 @@ const std::vector<JsonValue> &JsonValue::asArray() const {
     }
     return std::get<std::vector<JsonValue>>(value);
 }
-
-
 
 
 
